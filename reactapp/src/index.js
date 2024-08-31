@@ -27,6 +27,10 @@ import PrivateRoute from "./privateRoute";
 import AuthHeader from "./components/authHeader";
 import SignUpPage from "./signUpPage";
 import MoviesProvider from "./moviesContext";
+import ActorsContextProvider from "./contexts/actorsContext";
+import ActorsPage from "./pages/actorsPage";
+import FavouriteActorsPage from "./pages/favouriteActorsPage";
+import ActorPage from "./pages/actorDetailsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,6 +51,7 @@ const App = () => {
         <SiteHeader />
         <MoviesContextProvider>
         <TvShowsContextProvider>
+        <ActorsContextProvider>
         <MoviesProvider>
         <Routes>
           <Route path="/movies/:id/similar" element={<PrivateRoute> <SimilarMoviesPage /> </PrivateRoute> } />
@@ -63,6 +68,9 @@ const App = () => {
           <Route path="/tvShowReviews/:id" element={<PrivateRoute> <TvShowReviewPage /> </PrivateRoute> } />
           <Route path="/reviews/tvform" element={<PrivateRoute> <AddTvShowReviewPage/> </PrivateRoute> } />
           <Route path="/tvshows/:id" element={<PrivateRoute> <TvShowPage />  </PrivateRoute>} />
+          <Route exact path="/actors/favourites" element={<PrivateRoute> <FavouriteActorsPage /> </PrivateRoute>} />
+          <Route path="/actors" element={<PrivateRoute> <ActorsPage /> </PrivateRoute>} />
+          <Route path="/actors/:id" element={<PrivateRoute> <ActorPage /> </PrivateRoute>} />
           <Route path="/" element={ <PrivateRoute> <HomePage /> </PrivateRoute> } />
           <Route path="*" element={ <Navigate to="/" /> } />
           <Route path="/signup" element={<SignUpPage />} />
@@ -77,6 +85,7 @@ const App = () => {
               />
         </Routes>
         </MoviesProvider>
+        </ActorsContextProvider>
         </TvShowsContextProvider>
         </MoviesContextProvider>
         </AuthProvider>
