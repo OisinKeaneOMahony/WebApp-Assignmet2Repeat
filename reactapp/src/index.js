@@ -14,9 +14,19 @@ import AddMovieReviewPage from './pages/addMovieReviewPage'
 import TrendingMoviesPage from "./pages/trendingMoviesPage";
 import NowPlayingPage from "./pages/nowPlayingPage";
 import MustWatchPage from "./pages/mustWatchPage";
-import Login from "./components/user/login/login";
-import { useToken } from './useToken';
 import SimilarMoviesPage from "./pages/similarMoviesPage";
+import FavouriteTvShowsPage from "./pages/favouriteTvShowsPage";
+import TvShowPage from "./pages/tvShowDetailsPage";
+import TvShowsPage from "./pages/tvShowsPage";
+import TvShowReviewPage from "./pages/tvShowReviewPage";
+import TvShowsContextProvider from "./contexts/tvShowsContext";
+import AddTvShowReviewPage from './pages/addTvShowReviewPage';
+import LoginPage from "./loginPage";
+import AuthProvider from "./contexts/authContext";
+import PrivateRoute from "./privateRoute";
+import AuthHeader from "./components/authHeader";
+import SignUpPage from "./signUpPage";
+import MoviesProvider from "./moviesContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,27 +39,47 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const {token, setToken} = useToken();
-    if(!token) return <Login setToken={setToken} />
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+      <AuthProvider>
+        <AuthHeader />
         <SiteHeader />
         <MoviesContextProvider>
+        <TvShowsContextProvider>
+        <MoviesProvider>
         <Routes>
-          <Route path="/movies/:id/similar" element={ <SimilarMoviesPage /> } />
-          <Route path="/movies/must-watch" element={ <MustWatchPage /> } />
-          <Route path="/movies/now-playing" element={ <NowPlayingPage /> } />
-          <Route path="/movies/trending" element={ <TrendingMoviesPage /> } />
-          <Route path="/reviews/form" element={ <AddMovieReviewPage /> } />
-          <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
-          <Route path="/reviews/:id" element={ <MovieReviewPage /> } />
-          <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
-          <Route path="/movies/:id" element={<MoviePage />} />
-          <Route path="/" element={<HomePage />} />
+          <Route path="/movies/:id/similar" element={<PrivateRoute> <SimilarMoviesPage /> </PrivateRoute> } />
+          <Route path="/movies/must-watch" element={ <PrivateRoute> <MustWatchPage /> </PrivateRoute> } />
+          <Route path="/movies/now-playing" element={ <PrivateRoute> <NowPlayingPage /> </PrivateRoute> } />
+          <Route path="/movies/trending" element={ <PrivateRoute> <TrendingMoviesPage /> </PrivateRoute> } />
+          <Route path="/reviews/form" element={ <PrivateRoute> <AddMovieReviewPage /> </PrivateRoute> } />
+          <Route path="/movies/upcoming" element={ <PrivateRoute> <UpcomingMoviesPage /> </PrivateRoute> } />
+          <Route path="/reviews/:id" element={ <PrivateRoute> <MovieReviewPage /> </PrivateRoute> } />
+          <Route path="/movies/favorites" element={ <PrivateRoute> <FavoriteMoviesPage /> </PrivateRoute> } />
+          <Route path="/movies/:id" element={ <PrivateRoute> <MoviePage /> </PrivateRoute> } />
+          <Route path="/tvshows/favourites" element={<PrivateRoute> <FavouriteTvShowsPage /> </PrivateRoute>} />
+          <Route path="/tvshows" element={<PrivateRoute> <TvShowsPage /> </PrivateRoute>} />
+          <Route path="/tvShowReviews/:id" element={<PrivateRoute> <TvShowReviewPage /> </PrivateRoute> } />
+          <Route path="/reviews/tvform" element={<PrivateRoute> <AddTvShowReviewPage/> </PrivateRoute> } />
+          <Route path="/tvshows/:id" element={<PrivateRoute> <TvShowPage />  </PrivateRoute>} />
+          <Route path="/" element={ <PrivateRoute> <HomePage /> </PrivateRoute> } />
           <Route path="*" element={ <Navigate to="/" /> } />
+          <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/movies/upcoming"
+              element={
+                <PrivateRoute>
+                  <UpcomingMoviesPage />
+                </PrivateRoute>
+              }
+              />
         </Routes>
+        </MoviesProvider>
+        </TvShowsContextProvider>
         </MoviesContextProvider>
+        </AuthProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
